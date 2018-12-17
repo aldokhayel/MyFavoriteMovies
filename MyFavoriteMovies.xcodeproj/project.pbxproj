@@ -17,6 +17,7 @@
 		B42A237F21C0226000C5987C /* RequestToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42A237E21C0226000C5987C /* RequestToken.swift */; };
 		B42A238121C0452600C5987C /* ValidateWithLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42A238021C0452600C5987C /* ValidateWithLogin.swift */; };
 		B42A238321C0DD9E00C5987C /* SessionNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42A238221C0DD9E00C5987C /* SessionNew.swift */; };
+		B42A238521C13B5E00C5987C /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42A238421C13B5E00C5987C /* Account.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		B42A237E21C0226000C5987C /* RequestToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestToken.swift; sourceTree = "<group>"; };
 		B42A238021C0452600C5987C /* ValidateWithLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateWithLogin.swift; sourceTree = "<group>"; };
 		B42A238221C0DD9E00C5987C /* SessionNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionNew.swift; sourceTree = "<group>"; };
+		B42A238421C13B5E00C5987C /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +75,7 @@
 				B42A238021C0452600C5987C /* ValidateWithLogin.swift */,
 				B42A236B21BED7D000C5987C /* Main.storyboard */,
 				B42A238221C0DD9E00C5987C /* SessionNew.swift */,
+				B42A238421C13B5E00C5987C /* Account.swift */,
 			);
 			path = MyFavoriteMovies;
 			sourceTree = "<group>";
@@ -163,6 +166,7 @@
 				B42A236821BED7D000C5987C /* AppDelegate.swift in Sources */,
 				B42A238121C0452600C5987C /* ValidateWithLogin.swift in Sources */,
 				B42A237F21C0226000C5987C /* RequestToken.swift in Sources */,
+				B42A238521C13B5E00C5987C /* Account.swift in Sources */,
 				B42A238321C0DD9E00C5987C /* SessionNew.swift in Sources */,
 				B42A237A21BFC8A200C5987C /* Constants.swift in Sources */,
 			);

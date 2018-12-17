@@ -9,19 +9,23 @@
 import UIKit
 
 class LoginViewController: UITableViewController {
-
+    
     var appDelegate: AppDelegate!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate = UIApplication.shared.delegate as? AppDelegate
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-
+        
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-
+    
+    private func displayError(_ error: String){
+        print(error)
+    }
+    
     private func getRequestToken(){
         let methodParameters = [
             Constants.TMDBParametersKeys.ApiKey: Constants.TMDBParametersValues.ApiKey
@@ -33,12 +37,12 @@ class LoginViewController: UITableViewController {
             func displayError(_ error: String){
                 print(error)
             }
-
+            
             guard let error = error else {
                 displayError("error in request!)")
                 return
             }
-
+            
             guard let data = data else {
                 displayError("could not load data, it's nil))")
                 return
@@ -82,7 +86,6 @@ class LoginViewController: UITableViewController {
         request.httpBody = jsonData
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = headers
-        
         let task = appDelegate.sharedSession.dataTask(with: request){(data, response, error) in
             guard let error = error else {
                 displayError("error in loading")
@@ -102,7 +105,6 @@ class LoginViewController: UITableViewController {
                 let decoder = JSONDecoder()
                 let validateWithLoginResponse = try decoder.decode(ValidateWithLoginResponse.self, from: data)
                 print("\nlogin with token success = \(validateWithLoginResponse.success)")
-                //self.getS
             } catch let error{
                 displayError(error.localizedDescription)
                 let stringWrappwed = String(data: data, encoding: .utf8)
@@ -117,7 +119,7 @@ class LoginViewController: UITableViewController {
         task.resume()
     }
     // MARK: - Table view data source
-
+    
     private func getSessionID(_ requestToken: String){
         func displayError(_ error: String){
             print(error)
@@ -178,69 +180,59 @@ class LoginViewController: UITableViewController {
         }
         task.resume()
     }
+    
+    private func getUserID(_ sessionID: String) {
+        
+        /* TASK: Get a request token, then store it (appDelegate.requestToken) and login with the token */
+        
+        /* 1. Set the parameters */
+        let methodParameters = [
+            Constants.TMDBParametersKeys.ApiKey: Constants.TMDBParametersValues.ApiKey,
+            Constants.TMDBParametersKeys.SessionID: sessionID
+        ]
+        let url = appDelegate.tmdbURLFromParameters(methodParameters as [String:AnyObject], withPathExtension: "/account")
+        print(url.absoluteURL)
+        /* 2/3. Build the URL, Configure the request */
+        let request = URLRequest(url: url)
+        
+        /* 4. Make the request */
+        let task = appDelegate.sharedSession.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                self.displayError(error.localizedDescription)
+                return
+            }
+            guard let data = data else {
+                self.displayError("Error: data is nil")
+                return
+            }
+            
+            let account: Account
+            do {
+                
+                let decoder = JSONDecoder()
+                account = try decoder.decode(Account.self, from: data)
+                self.appDelegate.accountID = account.id
+                print("\nRequest token = \(account.id)\n")
+                //self.completeLogin()
+            } catch let err {
+                print(err.localizedDescription)
+                return
+                //self.debugTextLabel.text = err.localizedDescription
+            }
+        }
+        /* 7. Start the request */
+        task.resume()
+    }
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 0
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return 0
     }
-
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    
+    
 }
