@@ -18,6 +18,7 @@
 		B42A238121C0452600C5987C /* ValidateWithLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42A238021C0452600C5987C /* ValidateWithLogin.swift */; };
 		B42A238321C0DD9E00C5987C /* SessionNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42A238221C0DD9E00C5987C /* SessionNew.swift */; };
 		B42A238521C13B5E00C5987C /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42A238421C13B5E00C5987C /* Account.swift */; };
+		B4672FBB21C7F33F00ED11A2 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B4672FBA21C7F33F00ED11A2 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		B42A238021C0452600C5987C /* ValidateWithLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateWithLogin.swift; sourceTree = "<group>"; };
 		B42A238221C0DD9E00C5987C /* SessionNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionNew.swift; sourceTree = "<group>"; };
 		B42A238421C13B5E00C5987C /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
+		B4672FBA21C7F33F00ED11A2 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +52,7 @@
 		B42A235B21BED7D000C5987C = {
 			isa = PBXGroup;
 			children = (
+				B4672FBA21C7F33F00ED11A2 /* Default-568h@2x.png */,
 				B42A236621BED7D000C5987C /* MyFavoriteMovies */,
 				B42A236521BED7D000C5987C /* Products */,
 			);
@@ -76,6 +79,7 @@
 				B42A236B21BED7D000C5987C /* Main.storyboard */,
 				B42A238221C0DD9E00C5987C /* SessionNew.swift */,
 				B42A238421C13B5E00C5987C /* Account.swift */,
+				B42A237321BED7D200C5987C /* Info.plist */,
 			);
 			path = MyFavoriteMovies;
 			sourceTree = "<group>";
@@ -85,7 +89,6 @@
 			children = (
 				B42A236E21BED7D200C5987C /* Assets.xcassets */,
 				B42A237021BED7D200C5987C /* LaunchScreen.storyboard */,
-				B42A237321BED7D200C5987C /* Info.plist */,
 			);
 			path = others;
 			sourceTree = "<group>";
@@ -149,6 +152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B42A237221BED7D200C5987C /* LaunchScreen.storyboard in Resources */,
+				B4672FBB21C7F33F00ED11A2 /* Default-568h@2x.png in Resources */,
 				B42A236F21BED7D200C5987C /* Assets.xcassets in Resources */,
 				B42A236D21BED7D000C5987C /* Main.storyboard in Resources */,
 			);

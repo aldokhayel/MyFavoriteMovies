@@ -8,9 +8,13 @@
 
 import UIKit
 
-class LoginViewController: UITableViewController {
+class LoginViewController: UIViewController {
     
     var appDelegate: AppDelegate!
+    
+    @IBOutlet weak var usernameTextField: UITextField!
+    @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var loginButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,20 +30,35 @@ class LoginViewController: UITableViewController {
         print(error)
     }
     
-    private func getRequestToken(){
+    @IBAction func loginPressed(_ sender: Any) {
+        guard let username = usernameTextField.text else {
+            print("the username is empty")
+            return
+        }
+        guard let password = passwordTextField.text else {
+            print("the password is empty")
+            return
+        }
+        
+        getRequestToken(username: username, password: password)
+    }
+    
+    
+    private func getRequestToken(username: String, password: String){
         let methodParameters = [
             Constants.TMDBParametersKeys.ApiKey: Constants.TMDBParametersValues.ApiKey
         ]
         let url = appDelegate.tmdbURLFromParameters(methodParameters as [String : AnyObject], withPathExtension: "/authentication/token/new")
         let request = URLRequest(url: url)
         let task = appDelegate.sharedSession.dataTask(with: request){(data, response, error) in
-            
+            print(url.absoluteURL)
+            print(data)
             func displayError(_ error: String){
                 print(error)
             }
             
-            guard let error = error else {
-                displayError("error in request!)")
+            if let error = error {
+                displayError(error.localizedDescription)
                 return
             }
             
@@ -54,6 +73,7 @@ class LoginViewController: UITableViewController {
                 requestToken = try decoder.decode(RequestToken.self, from: data)
                 self.appDelegate.requestToken = requestToken.request_token
                 print("\nRequest token is: \(requestToken.request_token)")
+                self.loginWithToken(requestToken.request_token, username: username, password: password)
             } catch{
                 
             }
@@ -79,7 +99,7 @@ class LoginViewController: UITableViewController {
         }
         
         let methodParameters = [Constants.TMDBParametersKeys.ApiKey: Constants.TMDBParametersValues.ApiKey]
-        let url = appDelegate.tmdbURLFromParameters(methodParameters as [String : AnyObject], withPathExtension: "/authentication/token")
+        let url = appDelegate.tmdbURLFromParameters(methodParameters as [String : AnyObject], withPathExtension: "/authentication/token/validate_with_login")
         print(url.absoluteString)
         
         var request = URLRequest(url: url)
@@ -87,16 +107,15 @@ class LoginViewController: UITableViewController {
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = headers
         let task = appDelegate.sharedSession.dataTask(with: request){(data, response, error) in
-            guard let error = error else {
-                displayError("error in loading")
+            if let error = error  {
+                displayError(error.localizedDescription)
                 return
             }
-            print(error.localizedDescription)
             guard let data = data else {
                 displayError("the data is nil")
                 return
             }
-            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299  else {
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 399  else {
                 displayError("Your request returned a status code more than 2xx")
                 return
             }
@@ -105,6 +124,7 @@ class LoginViewController: UITableViewController {
                 let decoder = JSONDecoder()
                 let validateWithLoginResponse = try decoder.decode(ValidateWithLoginResponse.self, from: data)
                 print("\nlogin with token success = \(validateWithLoginResponse.success)")
+                self.getSessionID(requestToken)
             } catch let error{
                 displayError(error.localizedDescription)
                 let stringWrappwed = String(data: data, encoding: .utf8)
@@ -118,7 +138,7 @@ class LoginViewController: UITableViewController {
         }
         task.resume()
     }
-    // MARK: - Table view data source
+
     
     private func getSessionID(_ requestToken: String){
         func displayError(_ error: String){
@@ -147,11 +167,11 @@ class LoginViewController: UITableViewController {
         request.httpBody = jsonData
         
         let task = appDelegate.sharedSession.dataTask(with: request){(data, response, error) in
-            guard let error = error else {
-                displayError("error in loading")
+            if let error = error  {
+                displayError(error.localizedDescription)
                 return
             }
-            print(error.localizedDescription)
+
             guard let data = data else {
                 displayError("the data is nil")
                 return
@@ -160,13 +180,14 @@ class LoginViewController: UITableViewController {
             do {
                 let decoder = JSONDecoder()
                 let sessionNewResopnse = try decoder.decode(SessionNewResponse.self, from: data)
-                print("tSession new success: \(String(describing: sessionNewResopnse.success))")
+                print("Session new success: \(String(describing: sessionNewResopnse.success))")
                 guard let sessionID = sessionNewResopnse.session_id else {
                     displayError("could not get a valid session id")
                     return
                 }
                 self.appDelegate.sessionID = sessionID
                 print("the session id is: \(sessionID)")
+                self.getUserID(sessionID)
             } catch let error {
                 displayError(error.localizedDescription)
                 let stringWrapped = String(data: data, encoding: .utf8)
@@ -213,7 +234,7 @@ class LoginViewController: UITableViewController {
                 account = try decoder.decode(Account.self, from: data)
                 self.appDelegate.accountID = account.id
                 print("\nRequest token = \(account.id)\n")
-                //self.completeLogin()
+                self.completeLogin()
             } catch let err {
                 print(err.localizedDescription)
                 return
@@ -224,15 +245,18 @@ class LoginViewController: UITableViewController {
         task.resume()
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+    private func completeLogin(){
+//        let storyBoard = UIStoryboard(name: "login", bundle: nil)
+       let controller = storyboard?.instantiateViewController(withIdentifier: "viewController") as! ViewController
+//        self.present(controller, animated: true, completion: nil)
+        print("\nsuccessful login")
+            self.navigationController?.pushViewController(controller, animated: true)
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+//            self.performSegue(withIdentifier: "viewController", sender: self)
+//        })
+
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
-    }
     
     
 }
